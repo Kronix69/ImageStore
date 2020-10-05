@@ -38,7 +38,6 @@ void File::readFile(std::string file)
 	if (!input.good())
 		std::cout << "its not good\n";
 
-	// copies all data into buffer
 	data = std::vector<uint8_t>(std::istreambuf_iterator<char>(input), {});
 
 
@@ -81,9 +80,6 @@ void File::readPNG(std::string img)
 		FileSize |= ((pixel.green % 2) << (shift + 1));
 		FileSize |= ((pixel.blue % 2) << (shift + 2));
 
-		//std::cout << "magic file size: " << FileSize << " with shift " << (int)shift << "\n";
-
-		//std::cout << (int)pixel.red << " " << (int)pixel.green << " " << (int)pixel.blue << "\n";
 	}
 
 	std::cout << "File size: " << FileSize << "\n";
@@ -104,12 +100,11 @@ void File::readPNG(std::string img)
 		auto pixel = imgpixels.at(i);
 
 		uint8_t shift = (i * 3);
-		//std::cout << (i * 3) / 8 << "\n";
+
 		data.at((i * 3) / 8) |= ((pixel.red % 2) << (shift % 8));
 		data.at((i * 3 + 1) / 8) |= ((pixel.green % 2) << ((shift + 1) % 8));
 		data.at((i * 3 + 2) / 8) |= ((pixel.blue % 2) << ((shift + 2) % 8));
 
-	//	std::cout << "S " << (int)((pixel.red)) << " " << (int)((pixel.green) ) << " " << (int)((pixel.blue)) << "\n";
 	}
 
 
@@ -137,7 +132,6 @@ void File::exportPNG(std::string originalimage, std::string newimage)
 		pix.green = getBitFromByte(getByteFromInt(FileSize, (bit + 1) / 8), (bit + 1) % 8);
 		pix.blue = getBitFromByte(getByteFromInt(FileSize, (bit + 2) / 8), (bit + 2) % 8);
 
-		//std::cout << (int)pix.red << " " << (int)pix.green << " " << (int)pix.blue << "\n";
 
 		imgfilter.push_back(pix);
 	}
@@ -150,7 +144,6 @@ void File::exportPNG(std::string originalimage, std::string newimage)
 		pix.green = getBit((bit + 1) / 8, (bit + 1) % 8);
 		pix.blue = getBit((bit + 2) / 8, (bit + 2) % 8);
 
-		//std::cout << "S " << (int)pix.red << " " << (int)pix.green << " " << (int)pix.blue << "\n";
 
 		imgfilter.push_back(pix);
 	}
@@ -162,13 +155,11 @@ void File::exportPNG(std::string originalimage, std::string newimage)
 		auto pixel = origimage.get_pixel(x, y);
 		auto filterpixel = imgfilter.at(pix);
 
-		//std::cout << (int)pixel.red << " " << (int)pixel.green << " " << (int)pixel.blue << "\n";
  
 		pixel.red += (!(pixel.red % 2 == filterpixel.red)) * ((pixel.red == 255) ? -1 : 1);
 		pixel.green += (!(pixel.green % 2 == filterpixel.green)) * ((pixel.green == 255) ? -1 : 1);
 		pixel.blue += (!(pixel.blue % 2 == filterpixel.blue)) * ((pixel.blue == 255) ? -1 : 1);
 
-		//std::cout << (int)pixel.red << " " << (int)pixel.green << " " << (int)pixel.blue << "\n\n";
 
 		origimage.set_pixel(x, y, pixel);
 	}
