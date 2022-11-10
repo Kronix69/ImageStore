@@ -42,8 +42,8 @@ private:
 	}
 	template<typename t>
 	t read() {
-		read_location += sizeof(t);
-		return *reinterpret_cast<t*>(raw + (read_location - sizeof(t)))
+		reader_loc += sizeof(t);
+		return *reinterpret_cast<t*>(fs + (reader_loc - sizeof(t)))
 	};
 public:
 	std::vector<fs_entry> files;
